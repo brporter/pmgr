@@ -4,12 +4,9 @@
         xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         xmlns:data="clr-namespace:BryanPorter.PasswordManager.Data;assembly=pmgr.data" mc:Ignorable="d" x:Class="BryanPorter.PasswordManager.WpfUi.MainWindow"
+        xmlns:helpers="clr-namespace:BryanPorter.PasswordManager.WpfUi"
+        x:Name="WindowRoot"
         Title="Password Manager" Height="600" Width="800">
-
-    <controls:MetroWindow.Resources>
-        <CollectionViewSource x:Key="dataContextViewSource" />
-
-    </controls:MetroWindow.Resources>
     
     <controls:MetroWindow.Icon>
         <StaticResource ResourceKey="AppIcon"/>
@@ -17,50 +14,75 @@
 
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Header="Item Details" Position="Right" Width="200"/>
+            <controls:Flyout Header="Item Details" Position="Right" Width="200" DataContext="{Binding SelectedEntry}">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding Type}"/>
+                    <TextBlock Text="{Binding Key}"/>
+                    <TextBlock Text="{Binding Username}"/>
+                    <TextBlock Text="{Binding Password}"/>
+                </StackPanel>
+            </controls:Flyout>
         </controls:FlyoutsControl>
     </controls:MetroWindow.Flyouts>
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="25*"/>
-            <ColumnDefinition Width="75*"/>
+            <ColumnDefinition Width="20*" MaxWidth="300" MinWidth="200"/>
+            <ColumnDefinition Width="80*"/>
         </Grid.ColumnDefinitions>
-        
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <Label Content="groups" FontFamily="Segue UI" FontSize="50" />
-            <ScrollViewer>
-                <ListBox x:Name="GroupList" SelectionMode="Single" ItemsSource="{Binding Source={StaticResource dataContextViewSource}}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate DataType="{x:Type data:Group}">
-                            <StackPanel Margin="8, 4, 8, 4">
-                                <TextBlock Text="{Binding Name}"/>
-                                <TextBlock Text="{Binding Description}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-            </ScrollViewer>
-        </StackPanel>
-        
-        <ListBox Grid.Row="0" Grid.Column="1" SelectionMode="Single" ItemsSource="{Binding ElementName=GroupList,Path=SelectedItem.Entries}">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type data:Entry}">
+
+
+        <Label Grid.Row="0" Grid.Column="0" Content="groups" FontFamily="Segue UI" FontSize="50" />
+
+        <ListView Grid.Row="1" Grid.Column="0" BorderThickness="0" SelectionMode="Single" SelectedItem="{Binding SelectedGroup}" ItemsSource="{Binding GroupModels}" helpers:ItemSelectedCommand.Command="{Binding SelectGroup}" x:Name="GroupListView" SelectionChanged="GroupList_SelectionChanged">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Vertical" IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate DataType="{x:Type data:Group}">
                     <StackPanel Margin="8, 4, 8, 4">
-                        <TextBlock Text="{Binding Name}"></TextBlock>
-                        <TextBlock Text="{Binding Type}"></TextBlock>
-                        <TextBlock Text="{Binding Key}"></TextBlock>
-                        <TextBlock Text="{Binding Username}"></TextBlock>
-                        <TextBlock Text="{Binding Password}"></TextBlock>
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="{Binding Description}"/>
                     </StackPanel>
                 </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+            </ListView.ItemTemplate>
+        </ListView>
 
+        <controls:TransitioningContentControl x:Name="TransitioningControl" Grid.Row="1" Grid.Column="1" Transition="LeftReplace">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding EntryModels}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ElementName=TransitioningControl, Path=ActualWidth}" IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="100" Width="200" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <!--<ListView BorderThickness="0" SelectionMode="Single" ItemsSource="{Binding EntryModels}" x:Name="EntryListView">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ElementName=TransitioningControl, Path=ActualWidth}" IsItemsHost="True"/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="100" Width="200" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click" />
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>-->
+        </controls:TransitioningContentControl>
     </Grid>
 
 </controls:MetroWindow>
