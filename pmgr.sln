@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pmgr.wpfui", "pmgr.wpfui\pmgr.wpfui.csproj", "{F1BA8322-5AEC-4AAF-84FC-911564E621AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pmgr.data", "pmgr.data\pmgr.data.csproj", "{F3F80A12-CD09-403A-8761-F8C60311CAA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pmgr.data.tests", "pmgr.data.tests\pmgr.data.tests.csproj", "{4C03EF0A-B3E8-4EF6-A151-34C78C08B32C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1BA8322-5AEC-4AAF-84FC-911564E621AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1BA8322-5AEC-4AAF-84FC-911564E621AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1BA8322-5AEC-4AAF-84FC-911564E621AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1BA8322-5AEC-4AAF-84FC-911564E621AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3F80A12-CD09-403A-8761-F8C60311CAA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3F80A12-CD09-403A-8761-F8C60311CAA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3F80A12-CD09-403A-8761-F8C60311CAA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3F80A12-CD09-403A-8761-F8C60311CAA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C03EF0A-B3E8-4EF6-A151-34C78C08B32C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C03EF0A-B3E8-4EF6-A151-34C78C08B32C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C03EF0A-B3E8-4EF6-A151-34C78C08B32C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C03EF0A-B3E8-4EF6-A151-34C78C08B32C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
