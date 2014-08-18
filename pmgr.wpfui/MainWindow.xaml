@@ -14,13 +14,44 @@
 
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Header="Item Details" Position="Right" Width="200" DataContext="{Binding SelectedEntry}">
+            <controls:Flyout Header="{Binding Name}" Position="Right" Width="350" DataContext="{Binding SelectedEntry}">
                 <StackPanel>
-                    <TextBlock Text="{Binding Name}"/>
-                    <TextBlock Text="{Binding Type}"/>
-                    <TextBlock Text="{Binding Key}"/>
-                    <TextBlock Text="{Binding Username}"/>
-                    <TextBlock Text="{Binding Password}"/>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Key"/>
+                    <TextBlock Text="{Binding Key}">
+                        <TextBlock.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="UsernameAndPassword">
+                                        <Setter Property="TextBlock.Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Username"/>
+                    <TextBlock Text="{Binding Username}">
+                        <TextBlock.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Type}" Value="Generic">
+                                        <Setter Property="TextBlock.Visibility" Value="Hidden"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Password"/>
+                    <TextBlock Text="{Binding Password}">
+                            <TextBlock.Style>
+                                <Style>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Type}" Value="Generic">
+                                            <Setter Property="TextBlock.Visibility" Value="Hidden"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                    </TextBlock>
                 </StackPanel>
             </controls:Flyout>
         </controls:FlyoutsControl>
@@ -70,18 +101,6 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <!--<ListView BorderThickness="0" SelectionMode="Single" ItemsSource="{Binding EntryModels}" x:Name="EntryListView">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ElementName=TransitioningControl, Path=ActualWidth}" IsItemsHost="True"/>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="100" Width="200" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click" />
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>-->
         </controls:TransitioningContentControl>
     </Grid>
 
