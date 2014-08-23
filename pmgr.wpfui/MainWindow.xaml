@@ -14,44 +14,14 @@
 
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
-            <controls:Flyout Header="{Binding Name}" Position="Right" Width="350" DataContext="{Binding SelectedEntry}">
+            <controls:Flyout Header="{Binding SelectedEntry.Name}" Position="Right" Width="350">
                 <StackPanel>
-                    <Label FontFamily="Segue UI" FontSize="20" Content="Key"/>
-                    <TextBlock Text="{Binding Key}">
-                        <TextBlock.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Type}" Value="UsernameAndPassword">
-                                        <Setter Property="TextBlock.Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <Label FontFamily="Segue UI" FontSize="20" Content="Username"/>
-                    <TextBlock Text="{Binding Username}">
-                        <TextBlock.Style>
-                            <Style>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Type}" Value="Generic">
-                                        <Setter Property="TextBlock.Visibility" Value="Hidden"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
-                    <Label FontFamily="Segue UI" FontSize="20" Content="Password"/>
-                    <TextBlock Text="{Binding Password}">
-                            <TextBlock.Style>
-                                <Style>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Type}" Value="Generic">
-                                            <Setter Property="TextBlock.Visibility" Value="Hidden"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                    </TextBlock>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Key" Visibility="{Binding KeyVisibility}"/>
+                    <TextBlock Text="{Binding SelectedEntry.Key}" Visibility="{Binding KeyVisibility}"/>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Username" Visibility="{Binding UsernameVisibility}"/>
+                    <TextBlock Text="{Binding SelectedEntry.Username}" Visibility="{Binding UsernameVisibility}"/>
+                    <Label FontFamily="Segue UI" FontSize="20" Content="Password" Visibility="{Binding PasswordVisibility}"/>
+                    <TextBlock Text="{Binding SelectedEntry.Password}" Visibility="{Binding PasswordVisibility}"/>
                 </StackPanel>
             </controls:Flyout>
         </controls:FlyoutsControl>
@@ -96,7 +66,15 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="100" Width="200" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click" />
+                            <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="120" Width="250" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Width="125" MaxWidth="125" Stretch="None" Source="Resources/silk-blue-fondos-de-pantalla-imagenes-1736554.jpg"/>
+                                    <StackPanel Orientation="Vertical">
+                                        <Button Content="Edit"/>
+                                        <Button Content="Copy"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </controls:Tile>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

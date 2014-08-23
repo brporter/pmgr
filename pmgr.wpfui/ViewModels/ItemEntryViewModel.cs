@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using BryanPorter.PasswordManager.Data;
 
@@ -23,6 +24,23 @@ namespace BryanPorter.PasswordManager.WpfUi.ViewModels
             typeof (Entry),
             typeof (ItemEntryViewModel),
             new UIPropertyMetadata(null));
+
+        public static readonly DependencyProperty KeyVisibilityProperty = DependencyProperty.Register("KeyVisibility", 
+            typeof (Visibility), 
+            typeof (ItemEntryViewModel), 
+            new PropertyMetadata(default(Visibility)));
+
+
+        public static readonly DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", 
+            typeof (Visibility), 
+            typeof (ItemEntryViewModel), 
+            new PropertyMetadata(default(Visibility)));
+
+
+        public static readonly DependencyProperty PasswordVisibilityProperty = DependencyProperty.Register("PasswordVisibility", 
+            typeof (Visibility), 
+            typeof (ItemEntryViewModel), 
+            new PropertyMetadata(default(Visibility)));
 
         private readonly DataContext _dataContext;
 
@@ -48,7 +66,7 @@ namespace BryanPorter.PasswordManager.WpfUi.ViewModels
                             Key = "Key",
                             Username = "Username",
                             Password = "Password",
-                            Type = EntryType.Generic
+                            Type = EntryType.UsernamePassword
                         });
                 }
 
@@ -73,7 +91,21 @@ namespace BryanPorter.PasswordManager.WpfUi.ViewModels
 
             SelectEntry = new SimpleCommand<Entry>()
             {
-                ExecuteAction = e => SelectedEntry = e
+                ExecuteAction = e =>
+                {
+                    SelectedEntry = e;
+
+                    if (e.Type == EntryType.Generic)
+                    {
+                        KeyVisibility = Visibility.Visible;
+                        UsernameVisibility = PasswordVisibility = Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        KeyVisibility = Visibility.Collapsed;
+                        UsernameVisibility = PasswordVisibility = Visibility.Visible;
+                    }
+                }
             };
         }
 
@@ -89,8 +121,27 @@ namespace BryanPorter.PasswordManager.WpfUi.ViewModels
             set { SetValue(SelectedEntryProperty, value); }
         }
 
+        public Visibility KeyVisibility
+        {
+            get { return (Visibility)GetValue(KeyVisibilityProperty); }
+            set { SetValue(KeyVisibilityProperty, value); }
+        }
+
+        public Visibility UsernameVisibility
+        {
+            get { return (Visibility)GetValue(UsernameVisibilityProperty); }
+            set { SetValue(UsernameVisibilityProperty, value); }
+        }
+
+        public Visibility PasswordVisibility
+        {
+            get { return (Visibility)GetValue(PasswordVisibilityProperty); }
+            set { SetValue(PasswordVisibilityProperty, value); }
+        }
+
         public ICommand SelectGroup { get; private set; }
         public ICommand SelectEntry { get; private set; }
+
         public ObservableCollection<Group> GroupModels { get; private set; }
         public ObservableCollection<Entry> EntryModels { get; private set; }
     }

@@ -19,6 +19,9 @@ namespace BryanPorter.PasswordManager.Data
 
         [DataMember]
         public string Password { get; set; }
+
+        [DataMember]
+        public byte[] ImageBytes { get; set; }
     }
 
     public enum EntryType
