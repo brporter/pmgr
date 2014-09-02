@@ -9,44 +9,47 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using BryanPorter.PasswordManager.Data;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace BryanPorter.PasswordManager.WpfUi.ViewModels
 {
-    public class ItemEntryViewModel
+    public class MainWindowViewModel
         : DependencyObject
     {
+        private readonly IDataContext _dataContext;
+        private readonly ISettingsContext _settingContext;
+
         public static readonly DependencyProperty SelectedGroupProperty = DependencyProperty.Register("SelectedGroup", 
             typeof (Group), 
-            typeof (ItemEntryViewModel), 
+            typeof (MainWindowViewModel), 
             new UIPropertyMetadata(null));
 
         public static readonly DependencyProperty SelectedEntryProperty = DependencyProperty.Register("SelectedEntry",
             typeof (Entry),
-            typeof (ItemEntryViewModel),
+            typeof (MainWindowViewModel),
             new UIPropertyMetadata(null));
 
         public static readonly DependencyProperty KeyVisibilityProperty = DependencyProperty.Register("KeyVisibility", 
             typeof (Visibility), 
-            typeof (ItemEntryViewModel), 
+            typeof (MainWindowViewModel), 
             new PropertyMetadata(default(Visibility)));
 
 
         public static readonly DependencyProperty UsernameVisibilityProperty = DependencyProperty.Register("UsernameVisibility", 
             typeof (Visibility), 
-            typeof (ItemEntryViewModel), 
+            typeof (MainWindowViewModel), 
             new PropertyMetadata(default(Visibility)));
 
 
         public static readonly DependencyProperty PasswordVisibilityProperty = DependencyProperty.Register("PasswordVisibility", 
             typeof (Visibility), 
-            typeof (ItemEntryViewModel), 
+            typeof (MainWindowViewModel), 
             new PropertyMetadata(default(Visibility)));
 
-        private readonly DataContext _dataContext;
-
-        public ItemEntryViewModel()
+        public MainWindowViewModel(IDataContext dataContext, ISettingsContext settingsContext)
         {
-            _dataContext = new DataContext(null);
+            _dataContext = dataContext;
+            _settingContext = settingsContext;
 
             for (int i = 0; i < 100; i++)
             {

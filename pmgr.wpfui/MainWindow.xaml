@@ -1,16 +1,76 @@
 ﻿<controls:MetroWindow
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-        xmlns:data="clr-namespace:BryanPorter.PasswordManager.Data;assembly=pmgr.data" mc:Ignorable="d" x:Class="BryanPorter.PasswordManager.WpfUi.MainWindow"
-        xmlns:helpers="clr-namespace:BryanPorter.PasswordManager.WpfUi"
-        x:Name="WindowRoot"
-        Title="Password Manager" Height="600" Width="800">
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+    xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:data="clr-namespace:BryanPorter.PasswordManager.Data;assembly=pmgr.data" mc:Ignorable="d" x:Class="BryanPorter.PasswordManager.WpfUi.MainWindow"
+    xmlns:helpers="clr-namespace:BryanPorter.PasswordManager.WpfUi"
+    xmlns:valueConverters="clr-namespace:BryanPorter.PasswordManager.WpfUi.ValueConverters"
+    x:Name="WindowRoot"
+    Title="Password Manager" Height="600" Width="800"
+    DataContext="{Binding MainWindowViewModel, Source={StaticResource ViewModelLocator}}">
+    
+    <controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <dialogs:SimpleDialog x:Key="SettingsDialog" DataContext="{Binding SettingsViewModel, Source={StaticResource ViewModelLocator}}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <controls:MetroAnimatedSingleRowTabControl Grid.Row="0" Grid.Column="0">
+                        <TabItem Header="storage and security">
+                            <StackPanel>
+                                <Label Content="Password File Path" Target="{Binding ElementName=filePathTextBox}"/>
+                                
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox Grid.Column="0" Name="filePathTextBox"  Text="{Binding Settings.FilePath}" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}"/>
+                                    <Button Grid.Column="1" Content="Browse" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}" Margin="8, 0, 0, 0" Width="100"/>
+                                </Grid>
+                                
+                                <CheckBox Name="useIsolatedStorage" IsChecked="{Binding IsUsingIsolatedStorage}" Content="Let Password Manager Decide"/>
+                            </StackPanel>
+                        </TabItem>
+                        <TabItem Header="encryption">
+                            <TextBlock Text="Encryption Stuff"/>
+                        </TabItem>
+                    </controls:MetroAnimatedSingleRowTabControl>
+                    
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Margin="8,8,8,8" Width="100" Content="OK" Command="{Binding OkCommand}" CommandParameter="{Binding Settings}"  Click="closeSettingsDialog"/>
+                        <Button Margin="8,8,8,8" Width="100" IsDefault="True" Content="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding Settings}" Click="closeSettingsDialog"/>
+                    </StackPanel>
+                </Grid>
+            </dialogs:SimpleDialog>
+        </ResourceDictionary>
+    </controls:MetroWindow.Resources>
     
     <controls:MetroWindow.Icon>
-        <StaticResource ResourceKey="AppIcon"/>
+        <DrawingImage Drawing="{StaticResource AppIcon}"/>
     </controls:MetroWindow.Icon>
+    
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button>
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform" Visual="{StaticResource Shield}"/>
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Margin="4, 0, 0, 0" VerticalAlignment="Center" Text="lock"/>
+                </StackPanel>
+            </Button>
+            <Button Content="settings" Click="displaySettingsDialog"/>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
 
     <controls:MetroWindow.Flyouts>
         <controls:FlyoutsControl>
@@ -37,8 +97,7 @@
             <ColumnDefinition Width="80*"/>
         </Grid.ColumnDefinitions>
 
-
-        <Label Grid.Row="0" Grid.Column="0" Content="groups" FontFamily="Segue UI" FontSize="50" />
+        <TextBlock Grid.Row="0" Grid.Column="0" FontFamily="Segoe UI" FontSize="30">groups</TextBlock>
 
         <ListView Grid.Row="1" Grid.Column="0" BorderThickness="0" SelectionMode="Single" SelectedItem="{Binding SelectedGroup}" ItemsSource="{Binding GroupModels}" helpers:ItemSelectedCommand.Command="{Binding SelectGroup}" x:Name="GroupListView" SelectionChanged="GroupList_SelectionChanged">
             <ListView.ItemsPanel>
@@ -56,30 +115,38 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <controls:TransitioningContentControl x:Name="TransitioningControl" Grid.Row="1" Grid.Column="1" Transition="LeftReplace">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding EntryModels}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ElementName=TransitioningControl, Path=ActualWidth}" IsItemsHost="True"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="120" Width="250" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Width="125" MaxWidth="125" Stretch="None" Source="Resources/silk-blue-fondos-de-pantalla-imagenes-1736554.jpg"/>
-                                    <StackPanel Orientation="Vertical">
-                                        <Button Content="Edit"/>
-                                        <Button Content="Copy"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </controls:Tile>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+        <controls:TransitioningContentControl x:Name="TransitioningControl" Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Transition="LeftReplace">
+            <StackPanel>
+                <TextBlock FontFamily="Segoe UI" FontSize="30" Text="entries"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl ItemsSource="{Binding EntryModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" MaxWidth="{Binding ElementName=TransitioningControl, Path=ActualWidth}" IsItemsHost="True"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <controls:Tile Title="{Binding Name}" TiltFactor="2" Height="120" Width="250" Margin="8,8,8,8" Command="{Binding DataContext.SelectEntry, ElementName=WindowRoot}" CommandParameter="{Binding}" Click="EntryItem_Click">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Image Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Stretch="Uniform" Source="Resources/silk-blue-fondos-de-pantalla-imagenes-1736554.jpg"/>
+                                        <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Edit"/>
+                                    </Grid>
+                                </controls:Tile>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </ScrollViewer>
+            </StackPanel>
         </controls:TransitioningContentControl>
     </Grid>
-
 </controls:MetroWindow>

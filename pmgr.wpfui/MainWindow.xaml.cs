@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using BryanPorter.PasswordManager.Data;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace BryanPorter.PasswordManager.WpfUi
 {
@@ -14,11 +15,6 @@ namespace BryanPorter.PasswordManager.WpfUi
         public MainWindow()
         {
             InitializeComponent();
-
-            this.Loaded += (sender, args) =>
-            {
-                this.DataContext = new ViewModels.ItemEntryViewModel();
-            };
         }
 
         private void GroupList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -30,6 +26,18 @@ namespace BryanPorter.PasswordManager.WpfUi
         {
             var flyout = this.Flyouts.Items[0] as Flyout;
             flyout.IsOpen = !flyout.IsOpen;
+        }
+
+        private async void displaySettingsDialog(object sender, RoutedEventArgs e)
+        {
+            var dialog = (BaseMetroDialog) this.Resources["SettingsDialog"];
+            await this.ShowMetroDialogAsync(dialog);
+        }
+
+        private async void closeSettingsDialog(object sender, RoutedEventArgs e)
+        {
+            var dialog = (BaseMetroDialog) this.Resources["SettingsDialog"];
+            await this.HideMetroDialogAsync(dialog);
         }
     }
 }

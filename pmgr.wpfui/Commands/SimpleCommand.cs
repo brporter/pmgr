@@ -46,4 +46,44 @@ namespace BryanPorter.PasswordManager.WpfUi
             }
         }
     }
+
+    public class SimpleCommand
+        : ICommand
+    {
+        private Action _executeAction = null;
+
+        public bool CanExecute(object parameter)
+        {
+            return ExecuteAction != null;
+        }
+
+        protected virtual void OnCanExecuteChanged()
+        {
+            if (CanExecuteChanged != null)
+                CanExecuteChanged(this, EventArgs.Empty);
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public Action ExecuteAction
+        {
+            get { return _executeAction; }
+            set
+            {
+                if (value != _executeAction)
+                {
+                    _executeAction = value;
+                    OnCanExecuteChanged();
+                }
+            }
+        }
+
+        public void Execute(object parameter)
+        {
+            if (ExecuteAction != null)
+            {
+                ExecuteAction();
+            }
+        }
+    }
 }
