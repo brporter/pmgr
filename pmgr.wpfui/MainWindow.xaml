@@ -31,8 +31,8 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Column="0" Name="filePathTextBox"  Text="{Binding Settings.FilePath}" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}"/>
-                                    <Button Grid.Column="1" Content="Browse" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}" Margin="8, 0, 0, 0" Width="100"/>
+                                    <TextBox Grid.Column="0" x:Name="filePathTextBox"  Text="{Binding Settings.FilePath}" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}"/>
+                                    <Button Grid.Column="1" Content="Browse" IsEnabled="{Binding IsUsingIsolatedStorage, Converter={valueConverters:InverseValueConverter}}" Margin="8, 0, 0, 0" Width="100" Click="SelectStorageFile_Click"/>
                                 </Grid>
                                 
                                 <CheckBox Name="useIsolatedStorage" IsChecked="{Binding IsUsingIsolatedStorage}" Content="Let Password Manager Decide"/>

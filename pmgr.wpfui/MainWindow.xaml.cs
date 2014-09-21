@@ -39,5 +39,19 @@ namespace BryanPorter.PasswordManager.WpfUi
             var dialog = (BaseMetroDialog) this.Resources["SettingsDialog"];
             await this.HideMetroDialogAsync(dialog);
         }
+
+        private void SelectStorageFile_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new Microsoft.Win32.SaveFileDialog();
+            dlg.DefaultExt = ".dat"; // TODO: refactor this into a shared location / resource definition
+            dlg.Filter = "Password Manager Data Files (.dat)|*.dat"; // TODO: Globalization
+
+            var result = dlg.ShowDialog(this);
+
+            if (true == result)
+            {
+                filePathTextBox.Text = dlg.FileName;
+            }
+        }
     }
 }
